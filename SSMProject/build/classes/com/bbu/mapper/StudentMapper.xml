@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<!DOCTYPE mapper  
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<!-- namespace：该mapper.xml映射文件的唯一标识 -->
+<mapper namespace="com.bbu.mapper.StudentMapper">
+	
+	<select id="queryStudentById" parameterType="int" resultType="com.bbu.entity.Student">
+		select * from student where sid=#{sid}
+	</select>
+	
+</mapper>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+
+
+<!-- 数据库连接信息 -->
+	<bean id="properties" class="org.springframework.beans.factory.config.PreferencesPlaceholderConfigurer">
+		<property name="locations">
+			<array>
+				<value>classpath:db.properties</value>
+			</array>
+		</property>	
+	</bean>
+	
+	
+<!-- 配置数据库信息 替代conf.xml -->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+			<property name="driverClassName" value="${driver}"></property>
+			<property name="url" value="${url}"></property>
+			<property name="username" value="${username}"></property>
+			<property name="password" value="${password}"></property>
+			<property name="maxActive" value="${maxActive}"></property>
+			<property name="maxIdle" value="${maxIdle}"></property>
+	</bean>
+	
+	<!-- 配置XXMapper.xml  替代conf.xml  Mybatis 的核心类 sqlSessionFactory-->
+	<bean  id="sqlSessionFactory"  class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"></property>
+			<!-- 加载mybatis配置文件
+		<property name="configLocation" value="classpath:conf.xml"></property>
+	 	-->
+		<!-- mvc中加入【classpath:】com/bbu/mapper/*.xml -->
+	 	<property name="mapperLocations" value="classpath:com/bbu/mapper/*.xml"></property>
+
+	</bean>
+	
+	<!-- Spring整合Mybatis:将Mybatis的sqlSessionFactory交给Spring -->
+	<bean id="mappers" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+		<property name="basePackage" value="com.bbu.mapper"></property>	
+	</bean>
+	
+	
+	<!-- 依赖注入 -->
+	<bean id="studentService" class="com.bbu.service.impl.StudentServiceImpl">
+		<property name="studentMapper" ref="studentMapper"></property>
+	</bean>
+	
+	<!-- 给controller 注入service set方式  但是controller是注解方式加入ioc的
+	<bean id="studentController" class="com.bbu.controller.StudentController">
+		<property name="studentService" ref="studentService"></property>
+	</bean>
+		-->
+</beans>
